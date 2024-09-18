@@ -1,0 +1,41 @@
+
+User: When will the bot give out new word according to the code?
+Assistant:
+In the provided code, the bot "learns" word transitions based on the input list of words. However, the code itself is only responsible for building the data structure (the transition dictionary), and it doesn't include logic for generating new words or sentences. To explain when the bot will give out a new word, let's look at how this would typically work based on the structures created in the code.
+
+### To Give Out a New Word (Word Prediction):
+1. **Start with an initial word**.
+2. **Check the next word possibilities**.
+3. **Choose the next word**.
+4. **Continue the process**.
+
+To make the bot actually "give out" new words, you would need to implement a word-selection mechanism based on the `next_word` dictionary. Here’s an example of how you might implement this logic:
+
+```python
+import random
+def get_next_word(current_word):
+    if current_word not in next_word:
+        return None  
+    next_words_dict = next_word[current_word]
+    possible_next_words = list(next_words_dict.keys())
+    word_frequencies = list(next_words_dict.values())
+    next_word_selected = random.choices(possible_next_words, weights=word_frequencies, k=1)[0]
+    return next_word_selected
+
+def generate_sentence(start_word, max_length=10):
+    current_word = start_word
+    sentence = [current_word]
+    for _ in range(max_length - 1):
+        next_w = get_next_word(current_word)
+        if not next_w:
+            break
+        sentence.append(next_w)
+        current_word = next_w
+    return ' '.join(sentence)
+
+start = 'I'
+generated_sentence = generate_sentence(start)
+print(generated_sentence)
+```
+
+This code will enable the bot to generate new words based on the learned transition probabilities.
